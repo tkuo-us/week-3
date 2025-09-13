@@ -24,21 +24,21 @@ def to_binary(n):
         return to_binary(n // 2) + str(n % 2)
      
 
-def task_1():
+def task_1(df: pd.DataFrame):
     """
     Return a list of all column names in df_bellevue
     Sorted by the number of NA values in each column, from fewest NA values to most NA values.
     """
-    return df_bellevue.isna().sum().sort_values().index.tolist()
+    return df.isna().sum().sort_values().index.tolist()
 
-def task_2():
+def task_2(df: pd.DataFrame):
     """
     Return total number of entries for each year：
     - year
     - total_admissions
     """
     output = (
-        df_bellevue
+        df
         .dropna(subset=["year"])                # year is NaN for some rows
         .groupby("year", as_index=False)
         .size()
@@ -48,23 +48,23 @@ def task_2():
     )
     return output
 
-def task_3():
+def task_3(df: pd.DataFrame):
     """
     Return the average age of genders "m" and "w"
     as a Series indexed by
     """
-    tmp = df_bellevue.copy()
+    tmp = df.copy()
     tmp["age"] = pd.to_numeric(tmp["age"], errors="coerce")
     tmp["gender"] = tmp["gender"].str.lower().str.strip() # normalize
     tmp.loc[~tmp["gender"].isin(["m", "w"]), "gender"] = pd.NA # only keep "m" and "w", set others to NA
     return tmp.groupby("gender")["age"].mean()
 
-def task_4():
+def task_4(df: pd.DataFrame):
     """
     Return TOP 5 profession
     """
     return (
-        df_bellevue["profession"]
+        df["profession"]
         .dropna()
         .astype(str)
         .str.strip()
