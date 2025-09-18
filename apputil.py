@@ -28,14 +28,23 @@ url = 'https://github.com/melaniewalsh/Intro-Cultural-Analytics/raw/master/book/
 df = pd.read_csv(url)
 
 df["date_in"] = pd.to_datetime(df["date_in"], errors="coerce")
-
+df["year"] = df["date_in"].dt.year
 
 def task_1():
     """
     Return a list of all column names in df_bellevue
     Sorted by the number of NA values in each column, from fewest NA values to most NA values.
     """
-    return df.isna().sum().sort_values().index.tolist()
+    tmp = df.copy()
+
+    g = (tmp["gender"].astype(str).str.lower().str.strip()) # clean gender
+    tmp.loc[~g.isin(["m", "w"]), "gender"] = pd.NA
+
+    cols = [c for c in tmp.columns if c != "year"] # clen year
+    
+    ordered = tmp[cols].isna().sum().sort_values().index.tolist()
+
+    return ordered
 
 
 def task_2():
@@ -44,7 +53,6 @@ def task_2():
     - year
     - total_admissions
     """
-    df["year"] = df["date_in"].dt.year
     output = (
         df
         .dropna(subset=["year"])                # year is NaN for some rows
