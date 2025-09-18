@@ -28,7 +28,7 @@ url = 'https://github.com/melaniewalsh/Intro-Cultural-Analytics/raw/master/book/
 df = pd.read_csv(url)
 
 df["date_in"] = pd.to_datetime(df["date_in"], errors="coerce")
-df["year"] = df["date_in"].dt.year
+
 
 def task_1():
     """
@@ -44,6 +44,7 @@ def task_2():
     - year
     - total_admissions
     """
+    df["year"] = df["date_in"].dt.year
     output = (
         df
         .dropna(subset=["year"])                # year is NaN for some rows
